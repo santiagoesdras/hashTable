@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Consulta de Bitácora</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background-color: #f0f0f0; }
+    h1 { color: #333; }
+    label { display: block; margin-top: 10px; }
+    input, button { padding: 8px; margin-top: 5px; width: 100%; max-width: 400px; }
+    textarea { width: 100%; height: 200px; margin-top: 20px; }
+    .section { background: white; padding: 20px; margin-bottom: 20px; border-radius: 10px; box-shadow: 0 0 5px rgba(0,0,0,0.1); }
+  </style>
+</head>
+<body>
+
+  <h1>Gestor de Bitácora</h1>
+
+  <div class="section">
+    <h2>Cargar Base de Datos</h2>
+    <label for="filePath">Ruta del archivo CSV:</label>
+    <input type="text" id="filePath" placeholder="Ejemplo: data/base.csv">
+    <button onclick="setDb()">Cargar Base</button>
+  </div>
+
+  <div class="section">
+    <h2>Buscar por ID</h2>
+    <label for="searchId">ID:</label>
+    <input type="text" id="searchId">
+    <button onclick="searchById()">Buscar</button>
+  </div>
+
+  <div class="section">
+    <h2>Buscar por Nombre</h2>
+    <label for="searchName">Nombre completo:</label>
+    <input type="text" id="searchName" placeholder="Ejemplo: Juan Pérez">
+    <button onclick="searchByName()">Buscar</button>
+  </div>
+
+  <div class="section">
+    <h2>Resultado</h2>
+    <textarea id="result" readonly></textarea>
+  </div>
+
+  <script>
+    const serverUrl = "http://localhost:4567";
+
+    function setDb() {
+      const filePath = document.getElementById("filePath").value;
+      fetch(`${serverUrl}/setDb`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ filePath })
+      })
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById("result").value = JSON.stringify(data, null, 2);
+      })
+      .catch(error => {
+        document.getElementById("result").value = "Error al cargar la base: " + error;
+      });
+    }
+
+    function searchById() {
+      const id = document.getElementById("searchId").value;
+      fetch(`${serverUrl}/buscar/id/${id}`)
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById("result").value = JSON.stringify(data, null, 2);
+      })
+      .catch(error => {
+        document.getElementById("result").value = "Error en la búsqueda por ID: " + error;
+      });
+    }
+
+    function searchByName() {
+      const name = document.getElementById("searchName").value.trim().replace(/ /g, "+");
+      fetch(`${serverUrl}/buscar/nombre/${name}`)
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById("result").value = JSON.stringify(data, null, 2);
+      })
+      .catch(error => {
+        document.getElementById("result").value = "Error en la búsqueda por nombre: " + error;
+      });
+    }
+  </script>
+
+</body>
+</html>

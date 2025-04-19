@@ -1,0 +1,52 @@
+import static spark.Spark.*;
+import com.google.gson.Gson;
+import spark.Request;
+import spark.Response;
+
+public class Servidor {
+
+    public static void main(String[] args) {
+        ipAddress("0.0.0.0"); // Aceptar conexiones desde la red
+        port(4567); // Puerto del servidor
+
+        BitacoraManager bitacora = new BitacoraManager();
+        Gson gson = new Gson();
+
+        // Endpoint para setear la base de datos desde un CSV
+        post("/setDb", (req, res) -> {
+            String path = req.body(); // Cuerpo del request: solo la ruta del archivo CSV
+            bitacora.setDb(path);
+            res.status(200);
+            return "Base de datos cargada correctamente";
+        });
+
+        // Buscar por ID
+        get("/buscar/id/:id", (req, res) -> {
+            String id = req.params(":id");
+            BitacoraManager.Record r = bitacora.searchById(id);
+            res.type("application/json");
+
+            if (r != null) {
+                return gson.toJson(r);
+            } else {
+                res.status(404);
+                return "{\"error\":\"ID no encontrado\"}";
+            }
+        });
+
+        // Buscar por nombre
+        get("/buscar/nombre/:nombre", (req, res) -> {
+            String nombre = req.params(":nombre").replace("+", " ");
+            BitacoraManager.Record r = bitacora.searchByUserName(nombre);
+            res.type("application/json");
+
+            if (r != null) {
+                return gson.toJson(r);
+            } else {
+                res.status(404);
+                return "{\"error\":\"Nombre no encontrado\"}";
+            }
+        });
+    }
+}
+

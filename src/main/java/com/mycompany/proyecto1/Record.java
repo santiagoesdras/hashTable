@@ -6,8 +6,6 @@ package com.mycompany.proyecto1;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
-import java.util.*;
-import java.io.*;
 /**
  *
  * @author PC-JUANCHO

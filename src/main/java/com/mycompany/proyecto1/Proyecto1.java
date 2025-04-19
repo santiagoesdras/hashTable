@@ -6,12 +6,8 @@ package com.mycompany.proyecto1;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import static spark.Spark.*;
-import spark.Request;
-import spark.Response;
 /**
  *
  * @author PC-JUANCHO
@@ -19,37 +15,39 @@ import spark.Response;
 public class Proyecto1 {
     
     public static void main(String[] args){
-                ipAddress("0.0.0.0"); //Ip 0 para aceptar conexiones desde cualquier segmento de la red
+        //
+        //Configuraciones basicas 
+        //
+        ipAddress("0.0.0.0"); //Ip 0 para aceptar conexiones desde cualquier segmento de la red
         port(4567);//Puerto en el que funcionara el servidor
-        staticFiles.location("public"); // ✅ sin "/"
+        staticFiles.location("public"); //Seteo para acceder al index html
         
-        
+        //Encabezados cors para acceder a rutas de archivo sin restricciones
         options("/*", (request, response) -> {
-    String accessControlRequestHeaders = request.headers("Access-Control-Request-Headers");
-    if (accessControlRequestHeaders != null) {
-        response.header("Access-Control-Allow-Headers", accessControlRequestHeaders);
-    }
+            String accessControlRequestHeaders = request.headers("Access-Control-Request-Headers");
+            if (accessControlRequestHeaders != null) {
+                response.header("Access-Control-Allow-Headers", accessControlRequestHeaders);
+            }
 
-    String accessControlRequestMethod = request.headers("Access-Control-Request-Method");
-    if (accessControlRequestMethod != null) {
-        response.header("Access-Control-Allow-Methods", accessControlRequestMethod);
-    }
+            String accessControlRequestMethod = request.headers("Access-Control-Request-Method");
+            if (accessControlRequestMethod != null) {
+                response.header("Access-Control-Allow-Methods", accessControlRequestMethod);
+            }
 
-    return "OK";
-});
+            return "OK";
+        });
 
-before((request, response) -> {
-    response.header("Access-Control-Allow-Origin", "*");
-    response.header("Access-Control-Request-Method", "*");
-    response.header("Access-Control-Allow-Headers", "*");
-    response.type("application/json");
-});
-
+        before((request, response) -> {
+            response.header("Access-Control-Allow-Origin", "*");
+            response.header("Access-Control-Request-Method", "*");
+            response.header("Access-Control-Allow-Headers", "*");
+            response.type("application/json");
+        });
         
-        BinnacleManager binnacle = new BinnacleManager();
-        ObjectMapper mapper = new ObjectMapper();
+        BinnacleManager binnacle = new BinnacleManager();//Clase BinnacleManager para manejar toda la informacion de la bitacora
+        ObjectMapper mapper = new ObjectMapper();//Clase ObjectMapper para serializar o desSerializar json
         
-        //Endpoint para setear al base de datos desde un archivo CSV
+        //Endpoint para setear la base de datos desde un archivo CSV
         post("/setDb", (req, res) -> {
             JsonNode jsonGet = mapper.readTree(req.body());
             if(jsonGet.has("filePath")){                
@@ -72,7 +70,7 @@ before((request, response) -> {
             }
         });
         
-        //Buscar por ID
+        //Enpoint para buscar por ID
         get("/buscar/id/:id", (req, res) -> {
             String id = req.params(":id");
            
@@ -97,7 +95,7 @@ before((request, response) -> {
             }
         });
         
-        //Buscar por nombre completo
+        //Endpoint para buscar por nombre completo
         get("/buscar/nombre/:nombre", (req, res) -> {
            String nombre = req.params(":nombre").replace("+", " ");
            
@@ -124,7 +122,8 @@ before((request, response) -> {
            }
         });
     }
-    /*public static void main(String[] args){
+    //Funcion estatica para testear la clase logTable
+    /*public static void testingHashTable(String[] args){
         List<String> uIdErrors = new ArrayList<>();
         List<Integer> hashedUserIds = new ArrayList<>();
         int userIdCollisions = 0;

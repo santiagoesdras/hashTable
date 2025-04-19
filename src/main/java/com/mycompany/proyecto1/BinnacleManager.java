@@ -5,23 +5,21 @@
 package com.mycompany.proyecto1;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  *
  * @author PC-JUANCHO
  */
 public class BinnacleManager {
-    CsvReader csvReader = new CsvReader();
-    LogTable hashTable = new LogTable();
+    CsvReader csvReader = new CsvReader();//Clase CsvReader para desSerializar la informacion del archivo csv
+    LogTable hashTable = new LogTable();//Clase LogTable para manejar almacenar en memoria todos los registros
     
-    public void setDb(String filePath){
+    public void setDb(String filePath){//Metodo para setear el archivo csv de donde se leearan todos los registros
         csvReader.setFile(filePath);
         //this.firstRoute = csvReader.getMapRecord("firstRoute");
-        hashTable.setTablesSize(csvReader.getHashTableSize());
-        csvReader.fileReader(hashTable);
+        hashTable.setTablesSize(csvReader.getHashTableSize());//Metodo para setear el tama;o de la tabla en funcion de la cantidad de registros existentes
+        csvReader.fileReader(hashTable);//Metodo fileReader para procesar la informacion del archivo csv con parametro de referencia a la tabla hash
         /*try{
             for(Record actualRecord: firstRoute.values()){
                 hashTable.put(actualRecord);

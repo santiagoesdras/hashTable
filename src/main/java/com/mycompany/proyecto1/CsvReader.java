@@ -8,8 +8,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
-import java.io.*;
-
 /**
  *
  * @author PC-JUANCHO
@@ -35,12 +33,6 @@ public class CsvReader {
             actualRecord.setActions(action);
             actualRecord.setUserInfo(userInfo);
             hashTable.put(actualRecord, action);
-            /*if(!(firstRoute.containsKey(actualRecord.getUid()))){
-                firstRoute.put(actualRecord.getUid(), actualRecord);
-                secondRoute.put(actualRecord.getUserName(), actualRecord);
-            }else{
-                firstRoute.get(actualRecord.getUid()).setActions(action);
-            }*/
         }
     }   catch (IOException e) {
             e.printStackTrace();

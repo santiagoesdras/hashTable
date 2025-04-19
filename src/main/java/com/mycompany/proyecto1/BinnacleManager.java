@@ -20,23 +20,11 @@ public class BinnacleManager {
         //this.firstRoute = csvReader.getMapRecord("firstRoute");
         hashTable.setTablesSize(csvReader.getHashTableSize());//Metodo para setear el tama;o de la tabla en funcion de la cantidad de registros existentes
         csvReader.fileReader(hashTable);//Metodo fileReader para procesar la informacion del archivo csv con parametro de referencia a la tabla hash
-        /*try{
-            for(Record actualRecord: firstRoute.values()){
-                hashTable.put(actualRecord);
-            }
-        }catch(Exception e){
-            System.out.println("Error insertando valores de firstRoute en la hashTable");
-            e.printStackTrace();
-        }*/
     }
     public Record searchById(String uid){
         return hashTable.getById(uid);
     }
     public List<Record> searchByUserName(String userName){
-        /*if(secondRoute.containsKey(userName) && secondRoute.get(userName).exists){
-            return secondRoute.get(userName);
-        }
-        return null;*/
         if(hashTable.getByUserName(userName) == null || hashTable.getByUserName(userName).isEmpty()){
             return null;
         }

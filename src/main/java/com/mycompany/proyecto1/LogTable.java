@@ -27,8 +27,6 @@ public class LogTable {
     public void setTablesSize(int tableSize){
         idTable = new RecordList[tableSize * 2 + primeFactor];
         userNameTable = new RecordList[tableSize * 2 + primeFactor];
-    //    idTable = new RecordList[30000000];
-    //    userNameTable = new RecordList[30000000];
 
     }
     private int HashId(String id){
@@ -117,20 +115,9 @@ public class LogTable {
     public List<Record> getByUserName(String userName){
         try{
             RecordList temporalRecordList = userNameTable[HashUserName(userName.toUpperCase())];
-            //int i = 0;
-            //Record temporalRecord = temporalRecordList.records.get(i);
             return temporalRecordList.records;
-            
-            /*while(temporalRecord != null){
-                if(temporalRecord.getUserName().equals(userName)){
-                    break;
-                }else{
-                    i++;
-                }
-                temporalRecord = temporalRecordList.records.get(i);
-            */}/*
-            return temporalRecord;
-        */catch(Exception e){
+        }
+        catch(Exception e){
             return null;
         }
     }

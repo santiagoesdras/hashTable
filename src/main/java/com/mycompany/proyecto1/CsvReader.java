@@ -18,7 +18,7 @@ public class CsvReader {
     private String file;
     int hashTableSize = 0;
     public void fileReader(LogTable hashTable){ 
-       try(BufferedReader bufferedReader = new BufferedReader(new FileReader(file))){
+        try(BufferedReader bufferedReader = new BufferedReader(new FileReader(file))){
         String line;
         while((line = bufferedReader.readLine()) != null){
             String[] parts = line.split(";");

@@ -45,8 +45,14 @@ public class Record {
     public void setSearchTime(double searchTime){
         this.searchTime = searchTime;
     }
-    public String getUserName(){
+    public String getBindUserName(){
         return firstName + lastName;
+    }
+    public String getFirstName(){
+        return firstName;
+    }
+    public String getLastName(){
+        return lastName;
     }
     public String getUid(){
         return uId;

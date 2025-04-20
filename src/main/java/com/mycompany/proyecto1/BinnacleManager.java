@@ -30,7 +30,7 @@ public class BinnacleManager {
         }
         List<Record> trueRecords = new ArrayList<>();
         for(Record currentRecord: hashTable.getByUserName(userName)){
-            if(currentRecord.getExists() && currentRecord.getUserName().equals(userName)){
+            if(currentRecord.getExists() && currentRecord.getBindUserName().equals(userName)){
                 trueRecords.add(currentRecord);
             }
         }

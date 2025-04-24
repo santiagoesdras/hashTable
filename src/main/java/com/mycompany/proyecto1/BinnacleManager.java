@@ -22,7 +22,7 @@ public class BinnacleManager {
         csvReader.fileReader(hashTable);//Metodo fileReader para procesar la informacion del archivo csv con parametro de referencia a la tabla hash
     }
     public Record searchById(String uid){
-        return hashTable.getById(uid);
+        return hashTable.getByIdNew(uid);
     }
     public List<Record> searchByUserName(String userName){
         if(hashTable.getByUserName(userName) == null || hashTable.getByUserName(userName).isEmpty()){

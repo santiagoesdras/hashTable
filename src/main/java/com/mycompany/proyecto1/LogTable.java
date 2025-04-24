@@ -16,6 +16,7 @@ import java.io.*;
 public class LogTable {
     public class RecordList{
         List<Record> records = new ArrayList<>();
+        Map<String, Record> recordsNew = new HashMap<>();
     }
     RecordList[] idTable;
     RecordList[] userNameTable;
@@ -55,13 +56,29 @@ public class LogTable {
         return HashId(string.toUpperCase());
     }
     public void put(Record actualRecord, String action){
+        try{
             int indexId = HashId(actualRecord.getUid().toUpperCase());
             int indexUserName = HashUserName((actualRecord.firstName + actualRecord.lastName).toUpperCase());
             if(idTable[indexId] == null || userNameTable[indexUserName] == null){
-                putNewElement(indexId, indexUserName, actualRecord);
+                putNewElementNew(indexId, indexUserName, actualRecord);
             }else{
-                putCurrentElement(indexId, indexUserName, actualRecord, action);
+                putCurrentElementNew(indexId, indexUserName, actualRecord, action);
             }
+        }catch(Exception e){
+            System.out.println("Error en el ingreso de usuarios");
+            e.printStackTrace();
+        }
+//        System.out.println(idTable[HashId(actualRecord.getUid())].recordsNew.keySet());
+    }
+    public void putNewElementNew(int indexId, int indexUserName, Record actualRecord){
+        if(idTable[indexId] == null){
+            idTable[indexId] = new RecordList();
+        }
+        if(userNameTable[indexUserName] == null){
+            userNameTable[indexUserName] = new RecordList();
+        }
+        idTable[indexId].recordsNew.put(actualRecord.getUid(), actualRecord);
+        userNameTable[indexUserName].records.add(actualRecord); 
     }
     public void putNewElement(int indexId, int indexUserName, Record actualRecord){
             if(idTable[indexId] == null){
@@ -93,6 +110,21 @@ public class LogTable {
         if (!idUpdated) idTable[indexId].records.add(actualRecord);
         if (!userNameUpdated) userNameTable[indexUserName].records.add(actualRecord);
     }
+    public void putCurrentElementNew(int indexId, int indexUserName, Record actualRecord, String action){
+        Boolean idUpdated = false;
+        Boolean userNameUpdated = false;
+        if(idTable[indexId].recordsNew.containsKey(actualRecord.getUid())){
+            idTable[indexId].recordsNew.get(actualRecord.getUid()).setActions(action);
+            idUpdated = true;
+        }
+        if(userNameTable[indexUserName].recordsNew.containsKey(actualRecord.getUid())){
+            userNameTable[indexUserName].recordsNew.get(actualRecord.getUid()).setActions(action);
+            userNameUpdated = true;
+        }
+        if  (!idUpdated) idTable[indexId].recordsNew.put(actualRecord.getUid(), actualRecord);
+        if (!userNameUpdated) userNameTable[indexUserName].records.add(actualRecord);
+        
+    }
     public Record getById(String id){
         try{
             RecordList temporalRecordList = idTable[HashId(id.toUpperCase())];
@@ -108,6 +140,18 @@ public class LogTable {
                 temporalRecord = temporalRecordList.records.get(i);
             }
             return temporalRecord;   
+        }catch(Exception e){
+            return null;
+        }
+    }
+    public Record getByIdNew(String id){
+        try{
+            RecordList temporalRecordList = idTable[HashId(id.toUpperCase())];
+            if(temporalRecordList.recordsNew.containsKey(id)){
+                return temporalRecordList.recordsNew.get(id);
+            }else{
+                return null;
+            }
         }catch(Exception e){
             return null;
         }

@@ -58,7 +58,8 @@ public class LogTable {
     public void put(Record actualRecord, String action){
         try{
             int indexId = HashId(actualRecord.getUid().toUpperCase());
-            int indexUserName = HashUserName((actualRecord.firstName + actualRecord.lastName).toUpperCase());
+            String nameUpperCase = (actualRecord.firstName + actualRecord.lastName).toUpperCase();
+            int indexUserName = HashUserName(nameUpperCase);
             if(idTable[indexId] == null || userNameTable[indexUserName] == null){
                 putNewElementNew(indexId, indexUserName, actualRecord);
             }else{
@@ -158,7 +159,8 @@ public class LogTable {
     }
     public List<Record> getByUserName(String userName){
         try{
-            RecordList temporalRecordList = userNameTable[HashUserName(userName.toUpperCase())];
+            String nameUpperCase = userName.toUpperCase();
+            RecordList temporalRecordList = userNameTable[HashUserName(nameUpperCase)];
             return temporalRecordList.records;
         }
         catch(Exception e){

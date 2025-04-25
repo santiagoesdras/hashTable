@@ -8,7 +8,9 @@
     h1 { color: #333; }
     label { display: block; margin-top: 10px; }
     input, button { padding: 8px; margin-top: 5px; width: 100%; max-width: 400px; }
-    textarea { width: 100%; height: 200px; margin-top: 20px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { background-color: #eee; }
     .section { background: white; padding: 20px; margin-bottom: 20px; border-radius: 10px; box-shadow: 0 0 5px rgba(0,0,0,0.1); }
   </style>
 </head>
@@ -32,18 +34,42 @@
 
   <div class="section">
     <h2>Buscar por Nombre</h2>
-    <label for="searchName">Nombre completo:</label>
-    <input type="text" id="searchName" placeholder="Ejemplo: Juan Pérez">
+    <label for="searchFirstName">Nombre:</label>
+    <input type="text" id="searchFirstName" placeholder="Ejemplo: Juan">
+    <label for="searchLastName">Apellido:</label>
+    <input type="text" id="searchLastName" placeholder="Ejemplo: Pérez">
     <button onclick="searchByName()">Buscar</button>
   </div>
 
   <div class="section">
     <h2>Resultado</h2>
-    <textarea id="result" readonly></textarea>
+    <div id="resultTable"></div>
   </div>
 
   <script>
     const serverUrl = "http://localhost:4567";
+
+    function clearInputs(...ids) {
+      ids.forEach(id => document.getElementById(id).value = "");
+    }
+
+    function renderTable(data) {
+      if (!Array.isArray(data)) data = [data];
+
+      if (data.length === 0 || typeof data[0] !== 'object') {
+        document.getElementById("resultTable").innerHTML = "<p>No se encontraron resultados.</p>";
+        return;
+      }
+
+      const keys = Object.keys(data[0]);
+      const headerRow = keys.map(key => `<th>${key}</th>`).join("");
+      const rows = data.map(item =>
+        `<tr>${keys.map(key => `<td>${item[key]}</td>`).join("")}</tr>`
+      ).join("");
+
+      const tableHtml = `<table><thead><tr>${headerRow}</tr></thead><tbody>${rows}</tbody></table>`;
+      document.getElementById("resultTable").innerHTML = tableHtml;
+    }
 
     function setDb() {
       const filePath = document.getElementById("filePath").value;
@@ -54,10 +80,11 @@
       })
       .then(response => response.json())
       .then(data => {
-        document.getElementById("result").value = JSON.stringify(data, null, 2);
+        renderTable(data);
+        clearInputs("filePath");
       })
       .catch(error => {
-        document.getElementById("result").value = "Error al cargar la base: " + error;
+        document.getElementById("resultTable").innerHTML = "Error al cargar la base: " + error;
       });
     }
 
@@ -66,22 +93,27 @@
       fetch(`${serverUrl}/buscar/id/${id}`)
       .then(response => response.json())
       .then(data => {
-        document.getElementById("result").value = JSON.stringify(data, null, 2);
+        renderTable(data);
+        clearInputs("searchId");
       })
       .catch(error => {
-        document.getElementById("result").value = "Error en la búsqueda por ID: " + error;
+        document.getElementById("resultTable").innerHTML = "Error en la búsqueda por ID: " + error;
       });
     }
 
     function searchByName() {
-      const name = document.getElementById("searchName").value.trim().replace(/ /g, "+");
-      fetch(`${serverUrl}/buscar/nombre/${name}`)
+      const firstName = document.getElementById("searchFirstName").value.trim();
+      const lastName = document.getElementById("searchLastName").value.trim();
+      const fullName = (firstName + lastName).replace(/\s+/g, ""); // sin espacios
+
+      fetch(`${serverUrl}/buscar/nombre/${fullName}`)
       .then(response => response.json())
       .then(data => {
-        document.getElementById("result").value = JSON.stringify(data, null, 2);
+        renderTable(data);
+        clearInputs("searchFirstName", "searchLastName");
       })
       .catch(error => {
-        document.getElementById("result").value = "Error en la búsqueda por nombre: " + error;
+        document.getElementById("resultTable").innerHTML = "Error en la búsqueda por nombre: " + error;
       });
     }
   </script>

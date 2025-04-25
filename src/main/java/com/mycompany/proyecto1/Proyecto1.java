@@ -91,7 +91,7 @@ public class Proyecto1 {
                 return mapper.writeValueAsString(record);
             }else{
                 res.status(404);
-                return "{\"error\":\"ID no encontrado\", \"processingTime\":\"" + elapsedTime + "\"}";
+                return "{\"error\":\"Null\", \"processingTime\":\"" + elapsedTime + "\"}";
             }
         });
         
@@ -118,7 +118,7 @@ public class Proyecto1 {
                return mapper.writeValueAsString(records);
            }else{
                res.status(404);
-               return "{\"error\":\"UserName no encontrado\", \"processingTime\":\"" + elapsedTime + "\"}";
+               return "{\"error\":\"Null\", \"processingTime\":\"" + elapsedTime + "\"}";
            }
         });
     }
